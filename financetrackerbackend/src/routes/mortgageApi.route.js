@@ -13,8 +13,11 @@ res.json({ status: 'mortgage created', newMortgage})
 });
 
 //read
-mortgageApiRouter.get('/view', (req,res) => {
-
+mortgageApiRouter.get('/view/:id', async (req,res) => {
+    console.log("ID TEXT: " , req.params.id)
+    const mortgageInfo = await Mortgage.findById(req.params.id);
+    console.log(mortgageInfo);
+    res.send(mortgageInfo);
 })
 //update
 
