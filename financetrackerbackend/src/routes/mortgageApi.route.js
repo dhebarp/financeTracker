@@ -20,9 +20,16 @@ mortgageApiRouter.get('/view/:id', async (req,res) => {
     res.send(mortgageInfo);
 })
 //update
+mortgageApiRouter.put('/update/:id', async (req, res) =>{
+    const updateMortgageInfo = await Mortgage.findByIdAndUpdate((req.params.id), req.body, {new: true} );
+    res.send(updateMortgageInfo);
+})
 
 //delete
-
+mortgageApiRouter.delete('/delete/:id', async (req,res) =>{
+    await Mortgage.findByIdAndDelete(req.params.id);
+    res.status(200).json({msg: 'Removed: ' + req.params.id})
+})
 
 
 module.exports = mortgageApiRouter;
