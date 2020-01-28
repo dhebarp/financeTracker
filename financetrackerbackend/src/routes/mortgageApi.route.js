@@ -5,6 +5,19 @@ const Mortgage = require('../models/mortgageSchema');
 
 mortgageApiRouter.use(express.json());
 
+//check for authentication.
+mortgageApiRouter.use((req,res,next) =>{
+
+    if(req.session.user && req.session.user)
+    next();
+    else
+    res.status(401).send('Forbidden! Maybe Login')
+})
+mortgageApiRouter.get('/', (req,res) => {
+    res.send("You are logged in and can access dasboard" + req.session.user);
+});
+
+
 //create
 mortgageApiRouter.post('/new', async (req, res) => {
 const newMortgage = await Mortgage.create(req.body);

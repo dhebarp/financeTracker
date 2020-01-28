@@ -5,16 +5,22 @@ require('./mongo');
 const session = require('express-session');
 const mortgageApi = require('./routes/mortgageApi.route');
 const AuthRouter = require('./routes/Auth.route');
+const PublicRouter = require('./routes/Public.route');
+
+app.use(express.json())
+app.use(express.urlencoded({extended: false}));
 
 app.use(session({
     secret: 'FinanceTracker cat on windowsill', //this is now our salt.
-    name: 'ga_cookie_ftw',
+    name: 'cookie_crisp',
     cookie: { maxAge: 60000 }, //this is in seconds
     resave: false,
     saveUninitialized: false,
     rolling: true
 }));
 
+
+app.use('/public', PublicRouter);
 app.use('/auth', AuthRouter);
 app.use('/api', mortgageApi);
 
