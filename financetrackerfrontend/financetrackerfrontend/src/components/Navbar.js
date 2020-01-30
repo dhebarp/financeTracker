@@ -2,10 +2,12 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 
 export function Navbar () {
+  
     return(
+      <React.Fragment>
         <nav className={"navbar navbar-expand-lg navbar-light bg-light"}>
         <ul className="navbar-nav">
-        <li className= {"navbar-brand"}>asdsad</li>
+        <li className= {"navbar-brand"}>Alfred</li>
           <li className="nav-item active">
           <Link className={"nav-link"} to='/'>Home </Link>
           </li>
@@ -17,5 +19,6 @@ export function Navbar () {
           </li>
         </ul>
     </nav>
+    </React.Fragment>
     )   
 }

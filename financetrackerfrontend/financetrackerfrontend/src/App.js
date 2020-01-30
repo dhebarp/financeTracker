@@ -1,19 +1,26 @@
 import React from 'react';
 import './App.css';
-import { Switch, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { Dashboard } from './components/Dashboard';
 import { Footer } from './components/Footer';
 import { Home } from './components/Home';
+import {Auth} from './components/Auth';
 
-function App() {
+export function App() {
+
+  // if(!loginState){
+  //   renderForm();
+  // } else {
+  //   renderLoggedIn()
+  // }
+
   return (
     <div className="App">
       <Navbar />
-      <Switch>
-        <Route exact path={"/"} component={Home} />
-        <Route exact path={"/dashboard"} component={Dashboard} />
-      </Switch>
+      <Auth/>
+      <Route exact path={"/"} component={Home} />
+      <Route exact path={"/dashboard"} component={Dashboard} />
       <Footer />
     </div>
   );

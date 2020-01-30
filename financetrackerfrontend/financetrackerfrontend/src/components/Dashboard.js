@@ -1,16 +1,20 @@
 import React from 'react';
-import {MortgageManager} from './MortgageManager';
+import { MortgageManager } from './MortgageManager';
 
 export function Dashboard() {
     return (
         <div className={"container"}>
             <div className="row">
                 <div className="col">
-                    <MortgageManager />
+                    Cashflow Manager here
                 </div>
                 <div className="col">
+                    Asset Manager Here
+                </div>
+                <div className="col">
+                    <MortgageManager />
                 </div>
             </div>
-            </div>
-            )
+        </div>
+    )
 }

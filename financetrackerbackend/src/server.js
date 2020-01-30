@@ -6,6 +6,7 @@ const session = require('express-session');
 const mortgageApi = require('./routes/mortgageApi.route');
 const AuthRouter = require('./routes/Auth.route');
 const PublicRouter = require('./routes/Public.route');
+const cashflowApi = require('./routes/chashflowApi.route');
 
 app.use(express.json())
 app.use(express.urlencoded({extended: false}));
@@ -19,10 +20,10 @@ app.use(session({
     rolling: true
 }));
 
-
 app.use('/public', PublicRouter);
 app.use('/auth', AuthRouter);
-app.use('/api', mortgageApi);
+app.use('/mortgage', mortgageApi);
+app.use('/cashflow', cashflowApi);
 
 
 const port = process.env.EXPRESS_PORT || 4000;

@@ -21,9 +21,7 @@ export function Footer()
           </div>
       </div>
       </div>
-      <div className="footer-copyright text-center py-3">© 2018 Copyright:
-        <a href="#"> MDBootstrap.com</a>
-      </div>
+      <div className="footer-copyright text-center py-3">© 2020 Copyright: GA Shark Pty Ltd</div>
     </footer>
     )
 }
