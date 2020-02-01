@@ -1,6 +1,5 @@
 const express = require('express');
 const mortgageApiRouter = express.Router();
-require('../mongo');
 const Mortgage = require('../models/Mortgage.model');
 
 mortgageApiRouter.use(express.json());
@@ -15,7 +14,7 @@ mortgageApiRouter.use((req,res,next) =>{
     res.status(401).send('Forbidden! Maybe Login')
 })
 mortgageApiRouter.get('/', (req,res) => {
-    res.send("You are logged in and can access dasboard" + req.session.user);
+    res.send("You are logged in and can access dasboard");
 });
 
 

@@ -6,6 +6,7 @@ import { Dashboard } from './components/Dashboard';
 import { Footer } from './components/Footer';
 import { Home } from './components/Home';
 import {Auth} from './components/Auth';
+import {Signup} from './components/Signup';
 
 export function App() {
 
@@ -18,9 +19,10 @@ export function App() {
   return (
     <div className="App">
       <Navbar />
-      <Auth/>
       <Route exact path={"/"} component={Home} />
       <Route exact path={"/dashboard"} component={Dashboard} />
+      <Route exact path={"/auth"} component={Auth} />
+      <Route exact path={"/signup"} component={Signup} />
       <Footer />
     </div>
   );

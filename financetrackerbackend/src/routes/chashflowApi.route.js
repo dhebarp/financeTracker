@@ -1,6 +1,5 @@
 const express = require('express');
 const cashflowApiRouter = express.Router();
-require('../mongo');
 const cashflowModel = require('../models/Cashflow.model');
 
 cashflowApiRouter.use((req,res,next) =>{
@@ -15,6 +14,7 @@ cashflowApiRouter.get('/', (req,res) => {
 });
 
 cashflowApiRouter.post('/new', async (req, res) => {
+    req.body.user_id = req.session.user.id;
     const newCashflow = await cashflowModel.create(req.body);
     newCashflow.save();
     res.json({ status: 'cashflow data created', newCashflow });
