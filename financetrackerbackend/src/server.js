@@ -8,7 +8,7 @@ const AuthRouter = require('./routes/Auth.route');
 const PublicRouter = require('./routes/Public.route');
 const cashflowApi = require('./routes/chashflowApi.route');
 
-app.use(express.static('frontend'));
+app.use(express.static('./financetrackerbackend/frontend'));
 app.use(express.json())
 app.use(express.urlencoded({extended: false}));
 
