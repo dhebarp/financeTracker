@@ -1,7 +1,7 @@
-export function ShowInputLists(monthsList, categoryList) {
+//export function ShowInputLists(monthsList, categoryList) {
 
-const months = [
-    "Janurary",
+export const months = [
+    "January",
     "February",
     "March",
     "April",
@@ -15,7 +15,7 @@ const months = [
     "December"
 ];
 
-const categories = [
+export const categories = [
     "Food",
     "Entertainment", 
     "Travel",
@@ -28,10 +28,3 @@ const categories = [
     "Pets",
     "Holidays"
 ];
-
-const renderMonthsList = months.values();
-const renderCategoryList = categories.values();
-
-return(renderMonthsList, renderCategoryList);
-}
-
