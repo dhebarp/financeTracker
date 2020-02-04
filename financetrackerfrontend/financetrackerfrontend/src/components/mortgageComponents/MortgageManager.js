@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { calculatePayments } from '../components/subcomponents/MortgageData';
-import Chart from './subcomponents/MortgageChart';
+import { calculatePayments } from './MortgageData'
+import Chart from './MortgageChart';
 
-export function MortgageManager(props) {
+export function MortgageManager() {
 
   const [principal, setPrincipal] = useState(200000);
   const [rate, setRate] = useState(5);

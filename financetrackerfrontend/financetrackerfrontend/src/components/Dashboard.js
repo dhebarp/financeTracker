@@ -1,9 +1,9 @@
 import React from 'react';
-import { MortgageManager } from './MortgageManager';
+import { MortgageManager } from './mortgageComponents/MortgageManager';
 
 export function Dashboard() {
     return (
-        <div className={"container"}>
+        <div className="container">
             <div className="row">
                 <div className="col">
                     Cashflow Manager here
@@ -12,7 +12,7 @@ export function Dashboard() {
                     Asset Manager Here
                 </div>
                 <div className="col">
-                    <MortgageManager />
+                    <MortgageManager/>
                 </div>
             </div>
         </div>

@@ -40,7 +40,7 @@ export function Auth() {
               })
       }
   })
-}, []);
+},);
 
 const queryUserStatus = (url) => {
   fetch(url,
