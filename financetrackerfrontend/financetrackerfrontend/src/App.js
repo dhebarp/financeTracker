@@ -8,6 +8,7 @@ import { Home } from './components/Home';
 import {Auth} from './components/Auth';
 import {Signup} from './components/Signup';
 import {CashflowManager} from './components/cashflowComponents/CashflowManager';
+// import {SideNavBar} from './components/sideBarNav';
 
 export function App() {
 
@@ -20,6 +21,7 @@ export function App() {
   return (
     <div className="App">
       <Navbar />
+      {/* <SideNavBar/> */}
       <Switch>
       <Route exact path={"/"} component={Home} />
       <Route exact path={"/dashboard"} component={Dashboard} />

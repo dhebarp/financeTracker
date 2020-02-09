@@ -1,6 +1,5 @@
-//export function ShowInputLists(monthsList, categoryList) {
-
 export const months = [
+    "Please Select",
     "January",
     "February",
     "March",
@@ -16,6 +15,7 @@ export const months = [
 ];
 
 export const categories = [
+    "Please Select",
     "Food",
     "Entertainment", 
     "Travel",
