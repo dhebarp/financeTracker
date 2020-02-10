@@ -83,30 +83,30 @@ export class CashflowForm extends React.Component {
     addExpense = (event) => {
         event.preventDefault();
         const newExpense = [...this.state.expenses]
-        newExpense.push({ expenseName: this.state.expenseName, category: "", expenseAmount: ""})
+        newExpense.push({ expenseName: this.state.expenseName, category: this.state.category, expenseAmount: this.state.expenseAmount})
         this.setState({
             expenses: newExpense
         })
     }
 
     //finish logic fo this with state and props.
-    renderExpenses = (expense, index) => {
+    renderExpenses = (index) => {
         return (
             <React.Fragment>
                 <div className="form-group row">
                     <label for="exampleFormControlInput1">Expense Name:</label>
-                    <input name="expenseName" defaultValue="" value={this.state.expenseName} data-formindex={index} type="text" className="form-control" id="exampleFormControlInput1" placeholder="Name of Expense" onChange={this.handleChange} />
+                    <input name="expenseName" key={index} type="text" className="form-control" id="exampleFormControlInput1" placeholder="Name of Expense" onChange={this.handleChange} />
                     {/* (event) => this.handleExpenseChange(event.currentTarget.name, event.currentTarget.value, index) */}
                 </div>
                 <div class="form-group row">
                     <label for="exampleFormControlSelect1">Category</label>
-                    <select name="category" data-formindex={index} class="form-control" id="exampleFormControlSelect1" onChange={this.handleChange}>
+                    <select name="category" key={index} class="form-control" id="exampleFormControlSelect1" onChange={this.handleChange}>
                         {this.categoryDropDown()}
                     </select>
                 </div>
                 <div className="form-group row">
                     <label for="exampleFormControlInput1">Expense Amount:</label>
-                    <input name="expenseAmount" data-form-index={index} type="number" className="form-control" id="exampleFormControlInput1" placeholder="Amount" onChange={this.handleChange} />
+                    <input name="expenseAmount" key={index} type="number" className="form-control" id="exampleFormControlInput1" placeholder="Amount" onChange={this.handleChange} />
                 </div>
             </React.Fragment>
         )
@@ -137,7 +137,7 @@ export class CashflowForm extends React.Component {
                         </div>
                         {this.state.showIncome && this.renderAddForm()}
                         {this.state.expenses.map((expense, index) => {
-                            return <div key={`expense-form-${index}`}>{this.renderExpenses(expense, index)}</div>
+                            return <div key={index}>{this.renderExpenses(expense, index)}</div>
                         })}
                         <button class="btn btn-primary mb-2" onClick={this.toggleIncome}>Add Income</button>
                         <button class="btn btn-primary mb-2" onClick={this.addExpense}>Add Expense</button>
