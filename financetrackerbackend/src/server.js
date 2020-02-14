@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express')
 const app = express()
 const mongoose = require('mongoose');
+const cors = require('cors');
 const dbName = process.env.MONGO_COLLECTION || 'financetracker'
 const MongoURI = process.env.MONGODB_URI || `mongodb://localhost/${dbName}` 
 const cookieParser = require('cookie-parser');
@@ -13,6 +14,7 @@ const PublicRouter = require('./routes/Public.route');
 const cashflowApi = require('./routes/chashflowApi.route');
 
 app.use(cookieParser());
+app.use(cors());
 app.use(express.static('./financetrackerbackend/frontend'));
 app.use(express.json())
 app.use(express.urlencoded({extended: false}));
@@ -30,7 +32,7 @@ db.once('open', function() {
 app.use(session({
     secret: 'FinanceTracker cat on windowsill', //this is now our salt.
     name: 'cookie_crisp',
-    cookie: { maxAge: 60000 }, //this is in seconds
+    cookie: { maxAge: 64000000 }, //this is in miliseconds
     resave: false,
     saveUninitialized: false,
     store: new MongoStore({ mongooseConnection: db })

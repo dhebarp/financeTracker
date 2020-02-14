@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 
 const CashflowSchema = new Schema({
     month: String,
-    income: {
+    incomes: {
         primaryIncome: Number,
         investmentIncome: Number,
         otherIncome: Number

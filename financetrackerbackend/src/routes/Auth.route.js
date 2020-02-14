@@ -17,7 +17,7 @@ AuthRouter.post('/login', async (req, res) => {
         if(passwordCheck) {
             console.log("valid user profile");
             req.session.user = {id: user.id};
-            res.status(200).send({profile: {username: user.username, firstName: user.firstName}})
+            res.status(201).send({profile: {username: user.username, firstName: user.firstName}})
     } else {
         res.status(404).send({error: "Authentication Error"})
     }
@@ -27,11 +27,13 @@ AuthRouter.post('/login', async (req, res) => {
 });
 
 AuthRouter.get('/logout', (req, res) => {
-    //logout logic here
-    req.session.destroy();
-    
-    res.json({ status: 'You have logged out' })
-})
+    const destory = req.session.destroy();
+    if (destory) {
+        console.log("session destoryed")
+        res.status(200).send({ status: "user logged out succesfully" })
+    } else
+    res.status(400).send("unable to log user out")
+});
 
 
 module.exports = AuthRouter;
