@@ -5,9 +5,8 @@ import Chart from './CashflowExpensesChart';
 export function CashflowManager() {
 
   const [incomes, setIncomes] = useState({});
-  const [expenses, setexpenses] = useState([]);
+  const [expenses, setExpenses] = useState([]);
   const [category] = useState(categories.slice(1, 12));
-  const [results, setResults] = useState([])
   const [month, setMonth] = useState('');
   const [chartData, setChartData] = useState({
     labels: category, //labels need to match data
@@ -29,17 +28,21 @@ export function CashflowManager() {
     }]
   });
 
-const cashflowFetch = event => {
-}
+  useEffect(() => {
     fetch(`/cashflow/view/${month}`,
-    {
+      {
         method: "GET",
         credentials: "same-origin",
-        })
-    .then(async data => {
-            const newData = await data.json();
-            console.log(newData);
-    })
+      })
+      .then(async data => {
+        const newData = await data.json();
+        console.log(newData);
+        setIncomes(newData[0].incomes)
+        setExpenses(newData[0].expenses)
+      }).catch(err => {
+        console.log(err);
+      })
+  }, [month]);
 
 
   return (
@@ -47,14 +50,53 @@ const cashflowFetch = event => {
       <div className="container">
         <div className="input-group input-group-sm mb-3">
           <select className="custom-select" value={month} onChange={(event) => setMonth(event.target.value)} >
-            {months.map(month => {
-              return <option>{month}</option>
+            {months.map((month, index) => {
+              return <option key={index.month}>{month}</option>
             })}
           </select>
         </div>
       </div>
       <Chart chartData={chartData} />
-
+      <br />
+      <div className="container">
+        <table className="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Primary Income</th>
+              <th scope="col">Investment Income</th>
+              <th scope="col">Other Income</th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr>
+                <td>${incomes.primaryIncome}</td>
+                <td>${incomes.investmentIncome}</td>
+                <td>${incomes.otherIncome}</td>
+              </tr>
+          </tbody>
+        </table>
+      </div>
+      <br/>
+      <div className="container">
+        <table className="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Expense Name</th>
+              <th scope="col">Expense Category</th>
+              <th scope="col">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {expenses.slice(1,50).map((expense, index) => { //bit of a hack, need to fix this! 
+              return (<tr>
+                <td key={index.name}>{expense.name}</td>
+                <td key={index.category}>{expense.category}</td>
+                <td key={index.amount}>${expense.amount}</td>
+              </tr>)
+            })}
+          </tbody>
+        </table>
+      </div>
     </React.Fragment>
   )
 }
