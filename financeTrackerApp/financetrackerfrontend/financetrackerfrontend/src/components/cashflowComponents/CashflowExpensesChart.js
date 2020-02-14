@@ -21,7 +21,8 @@ class Chart extends React.Component {
                                 data={this.props.barChartData}
                                 width={200}
                                 height={200}
-                                options={{ responsive: true, maintainAspectRatio: false, legend: { position: "top" } }}
+                                options={{
+                                    responsive: true, maintainAspectRatio: false, legend: { position: "top"}}}
                             />
                         </div>
                         <div class="col">
@@ -29,7 +30,8 @@ class Chart extends React.Component {
                                 data={this.props.pieChartData}
                                 width={200}
                                 height={200}
-                                options={{ responsive: true, maintainAspectRatio: false, legend: { position: "top" } }}
+                                options={{
+                                    responsive: true, maintainAspectRatio: false, legend: { position: "top" } }}
                             />
                         </div>
                     </div>

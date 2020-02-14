@@ -33,7 +33,7 @@ export function MortgageManager() {
   };
 
   return (
-    <div className={'container'}>
+    <div className="container">
       <div className="row">
         <div className="col">
           <form onSubmit={handleSubmit}>
@@ -71,6 +71,7 @@ export function MortgageManager() {
                 setTotalInterest(totalInterest);
                 setTotalPayment(totalPayment);
               }} />
+              <button>Save Calculation</button>
             </div>
           </form>
         </div>
