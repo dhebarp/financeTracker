@@ -32,7 +32,7 @@ db.once('open', function() {
 app.use(session({
     secret: 'FinanceTracker cat on windowsill', //this is now our salt.
     name: 'cookie_crisp',
-    cookie: { maxAge: 60000 }, //this is in seconds
+    cookie: { maxAge: 64000000 }, //this is in miliseconds
     resave: false,
     saveUninitialized: false,
     store: new MongoStore({ mongooseConnection: db })

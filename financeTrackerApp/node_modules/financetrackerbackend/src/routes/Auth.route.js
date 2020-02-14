@@ -27,11 +27,13 @@ AuthRouter.post('/login', async (req, res) => {
 });
 
 AuthRouter.get('/logout', (req, res) => {
-    //logout logic here
-    req.session.destroy();
-    
-    res.json({ status: 'You have logged out' })
-})
+    const destory = req.session.destroy();
+    if (destory) {
+        console.log("session destoryed")
+        res.status(200).send({ status: "user logged out succesfully" })
+    } else
+    res.status(400).send("unable to log user out")
+});
 
 
 module.exports = AuthRouter;

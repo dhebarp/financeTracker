@@ -20,14 +20,15 @@ cashflowApiRouter.post('/new', async (req, res) => {
     res.json({ status: 'cashflow data created', newCashflow });
 });
 
-cashflowApiRouter.get('/view/:id', async (req, res) => {
-    const cashflowInfo = await cashflowModel.findOne({ _id: req.params.id, user_id: req.session.user.id });
+cashflowApiRouter.get('/view/:month', async (req, res) => {
+    req.body.user_id = req.session.user.id;
+    const cashflowInfo = await cashflowModel.find({month: req.params.month, user_id: req.session.user.id });
     console.log(cashflowInfo);
     res.send(cashflowInfo);
 });
 
 cashflowApiRouter.put('/update/:id', async (req, res) => {
-    // req.body.user_id = req.session.user.id;
+    req.body.user_id = req.session.user.id;
     const updateMortgageInfo = await cashflowModel.findOneAndUpdate(({ _id: req.params.id, user_id: req.session.user.id }), req.body, { new: true });
     res.send(updateMortgageInfo);
 });

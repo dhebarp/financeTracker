@@ -8,16 +8,12 @@ import { Home } from './components/Home';
 import {Auth} from './components/Auth';
 import {Signup} from './components/Signup';
 import {CashflowManager} from './components/cashflowComponents/CashflowManager';
+import {CashflowForm} from './components/cashflowComponents/CashflowForm';
+
 // import {SideNavBar} from './components/sideBarNav';
 
 export function App() {
-
-  // if(!loginState){
-  //   renderForm();
-  // } else {
-  //   renderLoggedIn()
-  // }
-
+  
   return (
     <div className="App">
       <Navbar />
@@ -28,6 +24,7 @@ export function App() {
       <Route exact path={"/auth"} component={Auth} />
       <Route exact path={"/signup"} component={Signup} />
       <Route exact path={"/cashflow"} component={CashflowManager} />
+      <Route exact path={"/cashflowform"} component={CashflowForm} />
       </Switch>
       <Footer />
     </div>

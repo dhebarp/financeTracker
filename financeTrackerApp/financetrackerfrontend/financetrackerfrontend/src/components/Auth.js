@@ -4,19 +4,18 @@ export function Auth() {
 
     const [user, setUser] = useState("");
     const [password, setPassword] = useState("");
-    // const [loginState, setLoginState] = useState(false);
     const [profile, setProfile] = useState({});
     const [errors, setErrors] = useState([]);
-    const [status, setStatus] = useState(0);
+    const [status, setStatus] = useState(false);
 
     useEffect(() => {
-  // const queryUserStatus = (headers, url) => { add these params back in when you query is successful
+//   const queryUserStatus = (headers, url) => { 
   fetch('/mortgage', {credentials: "same-origin"})
   .then(async data => {
       if(data.status === 201)
       {
           console.log("Mortgage route active!");
-          setStatus(1);
+          setStatus(false);
 
           //get the user information
           fetch('/auth/login',
@@ -35,7 +34,7 @@ export function Auth() {
                       const profile = await userData.json();
                       console.log(profile);
                       setProfile(profile);
-                      setStatus(1);
+                      setStatus(true);
                       setErrors([])
               })
       }
@@ -61,7 +60,7 @@ const queryUserStatus = (url) => {
               const profile = await data.json();
               console.log(profile);
               setProfile(profile);
-              setStatus(1);
+              setStatus(true);
               setErrors([])
           }
 
@@ -83,17 +82,17 @@ const logout = () => {
           credentials: "same-origin",
       })
       .then(async data => {
-          if(data.status === 201)
+          if(data.status === 200)
           {
-              setStatus(0);
+              setStatus(false);
               setProfile({});
               setErrors([])
           }
           else
           {
               console.log("error logging out");
-              if(user !== "")
-                  setErrors(["Error loggin out"])
+            //   if(user !== "")
+            //       setErrors(["Error loggin out"])
           }
       })
       .catch(e => {
@@ -139,9 +138,8 @@ const renderWelcome = () => {
 return (
   <div style={{"paddingTop": "20px"}}>
 
-      {status === 0 && renderForm()}
-      {status === 1 && renderWelcome()}
-
+      {!status && renderForm()}
+      {status && renderWelcome()}
 
       {  errors.map((e, index) => <p key={index}>{e}</p>)  }
   </div>
