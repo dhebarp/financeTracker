@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { categories, months } from './CashFlowCategories';
 import Chart from './CashflowExpensesChart';
+import {Link} from 'react-router-dom';
 
 export function CashflowManager() {
 
@@ -69,6 +70,7 @@ export function CashflowManager() {
               return <option key={index.month}>{month}</option>
             })}
           </select>
+          <button><Link to='/cashflowform'>Add Monthly Cashflow </Link></button>
         </div>
       </div>
       <Chart doughnutData={doughnut} barChartData={bar} pieChartData={pie}/>
