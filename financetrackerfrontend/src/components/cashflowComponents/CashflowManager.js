@@ -26,12 +26,14 @@ export function CashflowManager() {
       })
       .then(async data => {
         const newData = await data.json();
-        setIncomes(newData[0].incomes);
-        setExpenses(newData[0].expenses);
+        console.log(newData)
+        if(newData.data !== null) {
+        setIncomes(newData.data.incomes);
+        setExpenses(newData.data.expenses);
         setRenderInfo(true);
         // setCategory(newData[0].expenses);
 
-        const updatedIncomes = Object.values(newData[0].incomes)
+        const updatedIncomes = Object.values(newData.data.incomes)
 
         setPie({
           labels: ["Primary Income", "Investment Income", "Other Income"],
@@ -40,8 +42,8 @@ export function CashflowManager() {
             backgroundColor: ['rgba(115, 24, 111, 0.9)', 'rgba(37, 42, 17, 0.6)', 'rgba(182, 158, 125, 0.8)']
           }]
         });
-        const updatedExpenses = newData[0].expenses.slice(1, 100).map(a => a.amount);
-        const updatedCategoryList = newData[0].expenses.slice(1, 100).map(a => a.category);
+        const updatedExpenses = newData.data.expenses.slice(1, 100).map(a => a.amount);
+        const updatedCategoryList = newData.data.expenses.slice(1, 100).map(a => a.category);
 
         setDoughnut({
           labels: updatedCategoryList,
@@ -61,6 +63,9 @@ export function CashflowManager() {
               'rgba(145, 232, 131, 0.7)', 'rgba(5, 214, 225, 1)']
           }]
         });
+      } else {
+        setRenderInfo(false);
+      }
       }).catch(err => {
         console.log(err);
       })
@@ -81,6 +86,7 @@ export function CashflowManager() {
           <button><Link to='/cashflowform'>Add Monthly Cashflow </Link></button>
         </div>
       </div>
+      {!RenderInfo}
       {RenderInfo &&
       <div className="container">
       <Chart doughnutData={doughnut} barChartData={bar} pieChartData={pie} />

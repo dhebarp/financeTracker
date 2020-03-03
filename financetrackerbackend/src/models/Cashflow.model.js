@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema
 
 const CashflowSchema = new Schema({
-    month: String,
+    month: {type: String, required: [true, 'Please add data']},
     incomes: {
         primaryIncome: Number,
         investmentIncome: Number,
