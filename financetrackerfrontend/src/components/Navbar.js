@@ -18,7 +18,7 @@ export function Navbar() {
             <Link className={"nav-link"} to='/mortgage'>Mortgage Manager</Link>
           </li>
           <li className="nav-item active">
-            <Link className={"nav-link"} to='/auth'>Login</Link>
+            <Link className={"nav-link"} to='/login'>Login</Link>
           </li>
           <li className="nav-item active">
             <Link className={"nav-link"} to='/signup'>Signup</Link>

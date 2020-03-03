@@ -22,7 +22,7 @@ export function App() {
       <Switch>
       <Route exact path={"/"} component={Home} />
       <Route exact path={"/mortgage"} component={MortgageManager} />
-      <Route exact path={"/auth"} component={Auth} />
+      <Route exact path={"/login"} component={Auth} />
       <Route exact path={"/signup"} component={Signup} />
       <Route exact path={"/cashflow"} component={CashflowManager} />
       <Route exact path={"/cashflowform"} component={CashflowForm} />
