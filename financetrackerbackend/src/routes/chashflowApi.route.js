@@ -23,7 +23,7 @@ cashflowApiRouter.post('/new', async (req, res) => {
 cashflowApiRouter.get('/view/:month', async (req, res) => {
         req.body.user_id = req.session.user.id;
         const cashflowInfo = await cashflowModel.findOne({ month: req.params.month, user_id: req.session.user.id });
-
+    console.log(cashflowInfo);
         if(cashflowInfo !== null) {
 
             return res.status(200).json({
@@ -38,9 +38,6 @@ cashflowApiRouter.get('/view/:month', async (req, res) => {
 })
         }
 });
-
-
-
 
 cashflowApiRouter.put('/update/:id', async (req, res) => {
     req.body.user_id = req.session.user.id;

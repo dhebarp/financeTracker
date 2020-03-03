@@ -21,9 +21,7 @@ AuthRouter.post('/login', async (req, res) => {
     } else {
         res.status(404).send({error: "Authentication Error"})
     }
-    } else {
-        res.status(404).send({error: "Authentication Error"})
-    }
+}
 });
 
 AuthRouter.get('/logout', (req, res) => {
