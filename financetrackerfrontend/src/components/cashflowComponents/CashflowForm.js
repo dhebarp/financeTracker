@@ -6,10 +6,51 @@ export class CashflowForm extends React.Component {
         this.state = {
             month: "",
             showIncome: false,
+            showExpense: false,
             incomes: {},
-            expenses: []
+            expenses: [],
+            id: 0,
+            expenseName: '',
+            category: '',
+            expenseAmount: '',
         }
     }
+
+    /// HandleSubmit Here
+    handleSubmit = (event) => {
+        event.preventDefault();
+        console.log(this.state);
+
+        this.createNewCashflow();
+
+    }
+
+    //this works but data is sent in a string.
+    createNewCashflow = () => {
+
+        fetch("cashflow/new", {
+            method: "POST",
+            mode: "cors",
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            credentials: "same-origin",
+            body: JSON.stringify({
+                month: this.state.month,
+                incomes: {
+                    primaryIncome: +this.state.incomes.primaryIncome,
+                    investmentIncome: +this.state.incomes.investmentIncome,
+                    otherIncome: +this.state.incomes.otherIncome
+                },
+                expenses: this.state.expenses
+            })
+        }).then((res) => res.json())
+            .then((data) => {
+                console.log("data:", data);
+            })
+    }
+
     // render income when button pressed
     handleChange = (event, i) => {
         event.preventDefault();
@@ -32,11 +73,6 @@ export class CashflowForm extends React.Component {
             this.setState({
                 incomes: { ...this.state.incomes, otherIncome: value }
             })
-            // } else if (name === "") {
-            //     this.setState({SCAnswer: event.target.value});
-            //     const expenseGroup = this.state.;
-            //     SCAnswerGroup[i] = event.target.value;
-            //     this.setState({SCAnswerGroup});
         } else {
             this.setState({ [name]: value });
         }
@@ -52,51 +88,22 @@ export class CashflowForm extends React.Component {
         return (
             <React.Fragment>
                 <div className="form-group row">
-                    <label for="exampleFormControlInput1">Primary Income (per month):</label>
+                    <label htmlFor="exampleFormControlInput1">Primary Income (per month):</label>
                     <input value={this.state.incomes.primaryIncome} name="primaryIncome" type="number" className="form-control" onChange={this.handleChange} />
                 </div>
                 <div className="form-group row">
-                    <label for="exampleFormControlInput1">Investment Income/Dividends</label>
+                    <label htmlFor="exampleFormControlInput1">Investment Income/Dividends</label>
                     <input value={this.state.investmentIncome} name="investmentIncome" type="number" className="form-control" onChange={this.handleChange} />
                 </div>
                 <div className="form-group row">
-                    <label for="exampleFormControlInput1">Other Income</label>
+                    <label htmlFor="exampleFormControlInput1">Other Income</label>
                     <input value={this.state.otherIncome} name="otherIncome" type="number" className="form-control" onChange={this.handleChange} />
                 </div>
                 <hr />
             </React.Fragment>
         )
     }
-    addExpense = (event) => {
-        event.preventDefault();
-        const newExpense = [...this.state.expenses]
-        newExpense.push({ name: this.state.expenseName, category: this.state.category, amount: this.state.expenseAmount })
-        this.setState({
-            expenses: newExpense
-        })
-    }
-    //finish logic fo this with state and props.
-    renderExpenses = (index) => {
-        return (
-            <React.Fragment>
-                <div className="form-group row">
-                    <label for="exampleFormControlInput1">Expense Name:</label>
-                    <input name="expenseName" key={index} type="text" className="form-control" id="exampleFormControlInput1" placeholder="Name of Expense" onChange={this.handleChange} />
-                    {/* (event) => this.handleExpenseChange(event.currentTarget.name, event.currentTarget.value, index) */}
-                </div>
-                <div class="form-group row">
-                    <label for="exampleFormControlSelect1">Category</label>
-                    <select name="category" key={index} class="form-control" id="exampleFormControlSelect1" onChange={this.handleChange}>
-                        {this.categoryDropDown()}
-                    </select>
-                </div>
-                <div className="form-group row">
-                    <label for="exampleFormControlInput1">Expense Amount:</label>
-                    <input name="expenseAmount" key={index} type="number" className="form-control" id="exampleFormControlInput1" placeholder="Amount" onChange={this.handleChange} />
-                </div>
-            </React.Fragment>
-        )
-    }
+
     monthDropDown() {
         return months.map(month => {
             return <option>{month}</option>;
@@ -108,45 +115,58 @@ export class CashflowForm extends React.Component {
         })
     }
 
-
-    /// HandleSubmit Here
-    handleSubmit = (event) => {
+    toggleExpense = (event) => {
         event.preventDefault();
-        console.log(this.state);
-
-        this.createNewCashflow();
-
+        this.setState((state, props) => ({
+            showExpense: !state.showExpense
+        })
+        )
     }
 
-    //this works but data is sent in a string.
-    createNewCashflow = () => {
-
-        fetch("cashflow/new", {
-            method: "POST",
-            mode: "cors",
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            credentials: "same-origin", 
-            body: JSON.stringify({
-                month: this.state.month,
-                incomes: {
-                    primaryIncome: +this.state.incomes.primaryIncome,
-                    investmentIncome: +this.state.incomes.investmentIncome,
-                    otherIncome: +this.state.incomes.otherIncome
-                },
-                expenses: this.state.expenses
-            })
-        }).then((res) => res.json())
-            .then((data) => {
-                console.log("data:", data);
-            })
+    addExpense = (event) => {
+        event.preventDefault();
+        const newExpense = [...this.state.expenses]
+        newExpense.push({ id: this.state.id, name: this.state.expenseName, category: this.state.category, amount: this.state.expenseAmount })
+        this.setState({
+            expenses: newExpense,
+            showExpense: false,
+            expenseName: '',
+            category: '',
+            expenseAmount: '',
+        })
     }
 
+    deleteExpense = (event, id) => {
+        event.preventDefault();
+       const allexpenses = this.state.expenses;
 
+        allexpenses.splice(id, 1);
+        this.setState({expenses: allexpenses});
+    }
 
-
+    //finish logic fo this with state and props.
+    renderExpenseForm(index) {
+        return (
+            <>
+                <input key={index} value={this.state.id = (Math.floor(Math.random() * 100000000))} name="expenseName" type="hidden" className="form-control" id="exampleFormControlInput1" placeholder="Name of Expense" onChange={this.handleChange} />
+                <div className="form-group row">
+                    <label for="exampleFormControlInput1">Expense Name:</label>
+                    <input key={index} value={this.state.expenseName} name="expenseName" type="text" className="form-control" id="exampleFormControlInput1" placeholder="Name of Expense" onChange={this.handleChange} />
+                    {/* (event) => this.handleExpenseChange(event.currentTarget.name, event.currentTarget.value, index) */}
+                </div>
+                <div class="form-group row">
+                    <label for="exampleFormControlSelect1">Category</label>
+                    <select key={index} value={this.state.category} name="category" class="form-control" id="exampleFormControlSelect1" onChange={this.handleChange}>
+                        {this.categoryDropDown()}
+                    </select>
+                </div>
+                <div className="form-group row">
+                    <label for="exampleFormControlInput1">Expense Amount:</label>
+                    <input key={index} value={this.state.expenseAmount} name="expenseAmount" type="number" className="form-control" id="exampleFormControlInput1" placeholder="Amount" onChange={this.handleChange} />
+                </div>
+            </>
+        )
+    }
 
     render() {
         return (
@@ -154,6 +174,7 @@ export class CashflowForm extends React.Component {
                 <div className="jumbotron">
                     <form onSubmit={this.handleSubmit}>
                         <button class="btn btn-primary mb-2" onClick={this.toggleIncome}>Add Income</button>
+                        <button class="btn btn-info mb-2" onClick={this.toggleExpense}>Add New Expense</button>
                         <div class="form-group row">
                             <label for="exampleFormControlSelect1">Months</label>
                             <select name="month" class="form-control" onChange={this.handleChange} >
@@ -161,11 +182,28 @@ export class CashflowForm extends React.Component {
                             </select>
                         </div>
                         {this.state.showIncome && this.renderAddForm()}
-                        {this.state.expenses.map((expense, index) => {
-                            return <div key={index}>{this.renderExpenses(expense, index)}</div>
+                        {this.state.expenses.map((expense, id) => {
+                            return (<div key={id}>
+                                <div class="form-row">
+                                    <div class="col">
+                                        <input value={expense.name} type="text" className="form-control" readonly="true" />
+                                    </div>
+                                    <div class="col">
+                                        <input value={expense.category} type="text" className="form-control" readonly="true" />
+                                    </div>
+                                    <div class="col">
+                                        <input value={expense.amount} type="number" className="form-control" readonly="true" />
+                                    </div>
+                                </div>
+                                <br />
+                                <button class="btn btn-primary mb-2" onClick={this.updateExpense} >Edit Expense</button>
+                                <button class="btn btn-danger mb-2" onClick={this.deleteExpense}>Delete Expense</button>
+                            </div>
+                            )
                         })}
-                        <button class="btn btn-primary mb-2" onClick={this.addExpense}>Add Expense</button>
-                        <button type="submit" class="btn btn-success" onClick={this.handleSubmit}>Save Expenses</button>
+                        {this.state.showExpense && this.renderExpenseForm()}
+                        <button class="btn btn-primary mb-2" onClick={this.addExpense}>Save Expense</button>
+                        <button type="submit" class="btn btn-success" onClick={this.handleSubmit}>Save Month</button>
                     </form>
                 </div>
             </div>

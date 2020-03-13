@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import { Route, Switch } from 'react-router-dom';
+import { GlobalProvider } from './context/GlobalState'
 import {Navbar} from './components/Navbar';
 import {SideNavBar} from './components/sideBarNav';
 import { Footer } from './components/Footer';
@@ -17,6 +18,7 @@ export function App() {
   
   return (
     <div className="App">
+      <GlobalProvider>
       <Navbar />
       {/* <SideNavBar/> */}
       <Switch>
@@ -26,9 +28,9 @@ export function App() {
       <Route exact path={"/signup"} component={Signup} />
       <Route exact path={"/cashflow"} component={CashflowManager} />
       <Route exact path={"/cashflowform"} component={CashflowForm} />
-      
       </Switch>
       <Footer />
+      </GlobalProvider>
     </div>
   );
 }

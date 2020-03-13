@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext,useEffect } from 'react';
 import { categories, months } from './CashFlowCategories';
 import Chart from './CashflowExpensesChart';
 import { Link } from 'react-router-dom';
-import { numberWithCommas } from '/Users/paritoshdhebar/Documents/ga_sei_projects/unit4_project/financetrackerfrontend/src/utils/format'
+import { numberWithCommas } from '/Users/paritoshdhebar/Documents/ga_sei_projects/unit4_project/financetrackerfrontend/src/utils/format';
+import { GlobalContext } from '/Users/paritoshdhebar/Documents/ga_sei_projects/unit4_project/financetrackerfrontend/src/context/GlobalState.js';
+
 
 export function CashflowManager() {
-
   const [incomes, setIncomes] = useState({});
   const [expenses, setExpenses] = useState([]);
-  const [category, setCategory] = useState(categories.slice(1, 12));
   // add calculations to state here
   const [month, setMonth] = useState("Please Select");
   const [doughnut, setDoughnut] = useState({});
@@ -16,9 +16,11 @@ export function CashflowManager() {
   const [bar, setBar] = useState({});
   const [RenderInfo, setRenderInfo] = useState(false);
 
-
+  const {getCashflow } = useContext(GlobalContext);
 
   useEffect(() => {
+    // getCashflow();
+    // console.log(getCashflow);
     fetch(`/cashflow/view/${month}`,
       {
         method: "GET",
@@ -26,6 +28,7 @@ export function CashflowManager() {
       })
       .then(async data => {
         const newData = await data.json();
+
         console.log(newData)
         if (newData.data !== null) {
           setIncomes(newData.data.incomes);
@@ -33,7 +36,30 @@ export function CashflowManager() {
           setRenderInfo(true);
           // setCategory(newData[0].expenses);
 
+          const mappedCategories = categories.map(cat => {
+            return {category: cat, amount: 0}
+        })
+
+        const expenseData = newData.data.expenses.slice(1, 100) // need to refactor this.
+        console.log(expenseData);
+        const result = expenseData.reduce((accumulator, currentValue) => {
+            //find the index of the category
+            const indx = accumulator.findIndex((cat) => cat.category === currentValue.category);
+          
+            //update the amount for this category
+            accumulator[indx].amount += currentValue.amount;
+        
+            //return the accumulator for the next iteration
+            return accumulator
+        }, mappedCategories);
+
+        console.log(result);
+        
+        const resultNoZeroes = result.filter(cat => cat.amount > 0);
+
           const updatedIncomes = Object.values(newData.data.incomes)
+          const updatedExpenses = resultNoZeroes.map(a => a.amount);
+          const updatedCategoryList = resultNoZeroes.map(a => a.category);
 
           setPie({
             labels: ["Primary Income", "Investment Income", "Other Income"],
@@ -42,8 +68,6 @@ export function CashflowManager() {
               backgroundColor: ['rgba(115, 24, 111, 0.9)', 'rgba(37, 42, 17, 0.6)', 'rgba(182, 158, 125, 0.8)']
             }]
           });
-          const updatedExpenses = newData.data.expenses.slice(1, 100).map(a => a.amount);
-          const updatedCategoryList = newData.data.expenses.slice(1, 100).map(a => a.category);
 
           setDoughnut({
             labels: updatedCategoryList,
@@ -88,8 +112,8 @@ export function CashflowManager() {
       {!RenderInfo &&
         <div className="container">
           <div className="jumbotron jumbotron-fluid">
-            <h1 className="display-4">Missing some information?</h1>
-            {month === "Please Select" ? "Please select a month, or simple click below to add information for any given month." : `It Seems you have not entered any information for ${month}`}
+            <h1 className="display-4">Seems you are missing some information?</h1>
+            {month === "Please Select" ? "Please select a month, or simple click below to add information for any given month." : `It Seems you have not entered any information for the month of: ${month}`}
             <br />
             <br />
             <Link to='/cashflowform'><button type="button" className="btn btn-dark">Monthly Cashflow</button></Link>
