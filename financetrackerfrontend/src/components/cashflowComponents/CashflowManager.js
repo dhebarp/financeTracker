@@ -16,6 +16,7 @@ export function CashflowManager() {
   const [bar, setBar] = useState({});
   const [RenderInfo, setRenderInfo] = useState(false);
 
+  // eslint-disable-next-line
   const {getCashflow } = useContext(GlobalContext);
 
   useEffect(() => {
@@ -28,8 +29,7 @@ export function CashflowManager() {
       })
       .then(async data => {
         const newData = await data.json();
-
-        console.log(newData)
+        
         if (newData.data !== null) {
           setIncomes(newData.data.incomes);
           setExpenses(newData.data.expenses);
@@ -40,8 +40,7 @@ export function CashflowManager() {
             return {category: cat, amount: 0}
         })
 
-        const expenseData = newData.data.expenses.slice(1, 100) // need to refactor this.
-        console.log(expenseData);
+        const expenseData = newData.data.expenses // need to refactor this.
         const result = expenseData.reduce((accumulator, currentValue) => {
             //find the index of the category
             const indx = accumulator.findIndex((cat) => cat.category === currentValue.category);
@@ -52,8 +51,6 @@ export function CashflowManager() {
             //return the accumulator for the next iteration
             return accumulator
         }, mappedCategories);
-
-        console.log(result);
         
         const resultNoZeroes = result.filter(cat => cat.amount > 0);
 
@@ -150,7 +147,7 @@ export function CashflowManager() {
                 </tr>
               </thead>
               <tbody>
-                {expenses.slice(1, 50).map((expense, index) => { //bit of a hack, need to fix this! 
+                {expenses.map((expense, index) => { //bit of a hack, need to fix this! 
                   return (<tr>
                     <td key={index.name}>{expense.name}</td>
                     <td key={index.category}>{expense.category}</td>

@@ -7,8 +7,8 @@ class Chart extends React.Component {
         return (
             <React.Fragment>
                 <div className={'container'}>
-                    <div class="row">
-                        <div class="col">
+                    <div className="row">
+                        <div className="col">
                             <Doughnut
                                 data={this.props.doughnutData}
                                 width={200}
@@ -16,7 +16,7 @@ class Chart extends React.Component {
                                 options={{ responsive: true, maintainAspectRatio: false, legend: { position: "right" } }}
                             />
                         </div>
-                        <div class="col">
+                        <div className="col">
                             <Bar
                                 data={this.props.barChartData}
                                 width={200}
@@ -25,7 +25,7 @@ class Chart extends React.Component {
                                     responsive: true, maintainAspectRatio: false, legend: { position: "top"}}}
                             />
                         </div>
-                        <div class="col">
+                        <div className="col">
                             <Pie
                                 data={this.props.pieChartData}
                                 width={200}

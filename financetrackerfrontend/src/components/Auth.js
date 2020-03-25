@@ -12,34 +12,24 @@ export function Auth() {
 //   const queryUserStatus = (headers, url) => { 
   fetch('/mortgage', {credentials: "same-origin"})
   .then(async data => {
-      if(data.status === 201)
+      if(data.status === 200)
       {
-          console.log("Mortgage route active!");
-          setStatus(false);
+          setStatus(true);
 
           //get the user information
-          fetch('/auth/login',
+          fetch('/auth/checkUser',
               {
-                  method: "POST",
                   credentials: "same-origin",
-                  headers: {
-                      "Content-Type": "application/json"
-                  },
-                  body: JSON.stringify({
-                      username: user,
-                      password: password
-                  })
               })
               .then(async userData => {
                       const profile = await userData.json();
-                      console.log(profile);
                       setProfile(profile);
                       setStatus(true);
                       setErrors([])
               })
       }
   })
-},);
+},[]);
 
 const queryUserStatus = (url) => {
   fetch(url,
@@ -81,18 +71,19 @@ const logout = () => {
       {
           credentials: "same-origin",
       })
-      .then(async data => {
-          if(data.status === 200)
+      .then(async response => {
+          if(response.status === 201)
           {
               setStatus(false);
+              setUser("")
               setProfile({});
               setErrors([])
           }
           else
           {
               console.log("error logging out");
-            //   if(user !== "")
-            //       setErrors(["Error loggin out"])
+              if(user !== "")
+                  setErrors(["Error loggin out"])
           }
       })
       .catch(e => {
@@ -125,11 +116,13 @@ const renderForm = () => {
   )
 };
 
-const renderWelcome = () => {
+const renderProfile = () => {
   return (
       <div>
-          <p>You are logged in!, welcome {profile.profile.userName}</p>
-
+          <p>Username: {profile.username}</p>
+          <p>First Name: {profile.firstName}</p>
+          <p>Last Name: {profile.lastName}</p>
+          <p>Email: {profile.email}</p>
           <button onClick={logout} >Logout</button>
       </div>
   )
@@ -139,7 +132,7 @@ return (
   <div style={{"paddingTop": "20px"}}>
 
       {!status && renderForm()}
-      {status && renderWelcome()}
+      {status && renderProfile()}
 
       {  errors.map((e, index) => <p key={index}>{e}</p>)  }
   </div>

@@ -14,7 +14,7 @@ mortgageApiRouter.use((req,res,next) =>{
     res.status(401).send('Forbidden! Maybe Login')
 })
 mortgageApiRouter.get('/', (req,res) => {
-    res.send("You are logged in and can access dasboard");
+    res.status(200).send("You are logged in and can access dasboard");
 });
 
 

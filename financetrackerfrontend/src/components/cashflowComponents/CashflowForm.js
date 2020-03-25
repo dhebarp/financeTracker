@@ -9,7 +9,7 @@ export class CashflowForm extends React.Component {
             showExpense: false,
             incomes: {},
             expenses: [],
-            id: 0,
+            id: Math.floor(Math.random() * 100000000),
             expenseName: '',
             category: '',
             expenseAmount: '',
@@ -130,17 +130,17 @@ export class CashflowForm extends React.Component {
         this.setState({
             expenses: newExpense,
             showExpense: false,
+            id: Math.floor(Math.random() * 100000000), 
             expenseName: '',
             category: '',
             expenseAmount: '',
         })
     }
 
-    deleteExpense = (event, id) => {
-        event.preventDefault();
+    deleteExpense = (deleteIndex) => {
        const allexpenses = this.state.expenses;
 
-        allexpenses.splice(id, 1);
+        allexpenses.splice(deleteIndex, 1);
         this.setState({expenses: allexpenses});
     }
 
@@ -148,7 +148,7 @@ export class CashflowForm extends React.Component {
     renderExpenseForm(index) {
         return (
             <>
-                <input key={index} value={this.state.id = (Math.floor(Math.random() * 100000000))} name="expenseName" type="hidden" className="form-control" id="exampleFormControlInput1" placeholder="Name of Expense" onChange={this.handleChange} />
+                <input key={index} value={this.state.id} name="expenseName" type="hidden" className="form-control" onChange={this.handleChange} />
                 <div className="form-group row">
                     <label for="exampleFormControlInput1">Expense Name:</label>
                     <input key={index} value={this.state.expenseName} name="expenseName" type="text" className="form-control" id="exampleFormControlInput1" placeholder="Name of Expense" onChange={this.handleChange} />
@@ -182,8 +182,8 @@ export class CashflowForm extends React.Component {
                             </select>
                         </div>
                         {this.state.showIncome && this.renderAddForm()}
-                        {this.state.expenses.map((expense, id) => {
-                            return (<div key={id}>
+                        {this.state.expenses.map((expense, index) => {
+                            return (<div key={index}>
                                 <div class="form-row">
                                     <div class="col">
                                         <input value={expense.name} type="text" className="form-control" readonly="true" />
@@ -196,14 +196,14 @@ export class CashflowForm extends React.Component {
                                     </div>
                                 </div>
                                 <br />
-                                <button class="btn btn-primary mb-2" onClick={this.updateExpense} >Edit Expense</button>
-                                <button class="btn btn-danger mb-2" onClick={this.deleteExpense}>Delete Expense</button>
+                                <button class="btn btn-danger mb-2" onClick={() => this.deleteExpense(index)}>Delete Expense</button>
                             </div>
                             )
                         })}
                         {this.state.showExpense && this.renderExpenseForm()}
-                        <button class="btn btn-primary mb-2" onClick={this.addExpense}>Save Expense</button>
-                        <button type="submit" class="btn btn-success" onClick={this.handleSubmit}>Save Month</button>
+                        <hr/>
+                        <button className="btn btn-primary mb-2" onClick={this.addExpense}>Save Expense</button>
+                        <button type="submit" className="btn btn-success mb-2" onClick={this.handleSubmit}>Save Month</button>
                     </form>
                 </div>
             </div>
