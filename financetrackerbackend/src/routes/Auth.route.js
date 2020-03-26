@@ -11,7 +11,6 @@ AuthRouter.get('/checkUser', async (req, res) => {
     if(req.session.user)
     {
         const userInfo = await userModel.findOne({_id: req.session.user.id});
-        console.log(userInfo);
         res.status(200).send({username: userInfo.username, firstName: userInfo.firstName, lastName: userInfo.lastName, email: userInfo.email});
     }
     else
@@ -28,9 +27,8 @@ AuthRouter.post('/login', async (req, res) => {
     if(user){
         const passwordCheck = await bcrypt.compare(password, user.password)//check password matches with user input
         if(passwordCheck) {
-            console.log("valid user profile");
             req.session.user = {id: user.id};
-            res.status(201).send({profile: {username: user.username, firstName: user.firstName, lastName: user.lastName, email: user.email}})
+            res.status(201).send({username: user.username, firstName: user.firstName, lastName: user.lastName, email: user.email})
     } else {
         res.status(404).send({error: "Authentication Error"})
     }

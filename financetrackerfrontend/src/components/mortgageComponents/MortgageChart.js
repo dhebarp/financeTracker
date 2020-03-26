@@ -1,18 +1,27 @@
 import React from 'react';
-import { Doughnut } from 'react-chartjs-2';
+import { Doughnut, Line } from 'react-chartjs-2'
 
 class Chart extends React.Component {
      
     render() {
         return (
-            <div className={'container'}>
+            <>
+            <div className='container'>
                 <Doughnut
-                    data={this.props.chartData}
+                    data={this.props.pieChartData}
                     width={100}
                     height={200}
                     options={{ responsive: true, maintainAspectRatio: false }}
                 />
             </div>
+            <div>
+                <Line
+                   data={this.props.lineChartData}
+                   width={100}
+                   height={200}
+                   options={{ responsive: true, maintainAspectRatio: false }}/>
+            </div>
+            </>
         )
     }
 }

@@ -50,7 +50,6 @@ export function App() {
       <Route exact path={"/mortgage"} component={MortgageManager} />
       <Route exact path={"/cashflow"} component={CashflowManager} />
       <Route exact path={"/cashflowform"} component={CashflowForm} />
-      <Route path="*" component={() => "404 Not Found"} />
     </>
     )
   }
