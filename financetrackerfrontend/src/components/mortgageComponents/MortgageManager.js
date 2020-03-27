@@ -13,8 +13,7 @@ export function MortgageManager() {
   const [monthlyPayment, setMonthlyPayment] = useState(initialMonthlyPayment);
   const [totalInterest, setTotalInterest] = useState(initialTotalInterest);
   const [totalPayment, setTotalPayment] = useState(initialTotalPayment);
-  // console.log(monthlyPayment, totalPayment, totalPayment)
-
+  const [name, setName] = useState('')
   const { payments } = calculatePayments(
     +principal,
     +rate,
@@ -34,7 +33,7 @@ export function MortgageManager() {
   })
 
   const [lineChartData, setLineChartData] = useState({
-    labels: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25],
+    labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25],
     datasets: [{
       data: payments.map(a => a.balance),
       label: 'Balance Over Time',
@@ -61,13 +60,41 @@ export function MortgageManager() {
   const handleSubmit = (event) => {
     event.preventDefault();
     // console.log('you clicked submit');
+
+    createNewMortgage();
   };
+
+ const createNewMortgage = () => {
+
+    fetch("mortgage/new", {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      credentials: "same-origin",
+      body: JSON.stringify({
+        planName: name,
+        loanAmount: principal,
+        interestRate: rate,
+        loanDuration: years,
+      })
+    }).then((res) => res.json())
+      .then((data) => {
+        console.log("data:", data);
+      })
+  }
 
   return (
     <div className="container">
       <div className="row">
         <div className="col">
           <form onSubmit={handleSubmit}>
+            <div className="form-inline">
+              <label >Plan Name</label>
+              <input name="name" type="interest" value={name} className="form-group mx-sm-3 mb-2" placeholder="e.g. Option 1" onChange={e => { setName(e.target.value) }} />
+            </div>
             <div className="form-inline">
               <label>Borrow Amount</label>
               <input name="principal" value={principal} className="form-group mx-sm-3 mb-2" placeholder="700,000" onChange={e => {
@@ -78,11 +105,16 @@ export function MortgageManager() {
                 setTotalInterest(parseInt(totalInterest, 10));
                 setTotalPayment(parseInt(totalPayment, 10));
 
-                const newChartDataset = { ...pieChartData};
+                const newChartDataset = { ...pieChartData };
                 newChartDataset.datasets[0].data = [monthlyPayment, totalInterest, totalPayment];
-                const newLineChartDataset = {...lineChartData};
+                const newLineChartDataset = { ...lineChartData };
                 newLineChartDataset.datasets[0].data = payments.map(a => a.balance);
-                console.log(newLineChartDataset.datasets[0].data);
+                const arr2 = []
+
+                for (let i = 0; i < payments.length; i++) {
+                  arr2.push(i)
+                }
+                newLineChartDataset.labels = arr2;
 
                 setPieChartData(newChartDataset);
                 setLineChartData(newLineChartDataset);
@@ -107,16 +139,16 @@ export function MortgageManager() {
                 setTotalInterest(parseInt(totalInterest, 10));
                 setTotalPayment(parseInt(totalPayment, 10));
               }} />
-              <button>Save Calculation</button>
+              <button type="submit" className="btn btn-success mb-2" onClick={handleSubmit}>Save Plan</button>
             </div>
           </form>
         </div>
         <div className="col">
         </div>
       </div>
-      <Chart pieChartData={pieChartData} lineChartData={lineChartData}/>
-      <br/>
-      <Table payments={payments}/>
-    </div> 
+      <Chart pieChartData={pieChartData} lineChartData={lineChartData} />
+      <br />
+      <Table payments={payments} />
+    </div>
   )
 };

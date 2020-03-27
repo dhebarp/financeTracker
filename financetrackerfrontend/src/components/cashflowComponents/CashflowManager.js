@@ -1,4 +1,4 @@
-import React, { useState, useContext,useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { categories, months } from './CashFlowCategories';
 import Chart from './CashflowExpensesChart';
 import { Link } from 'react-router-dom';
@@ -17,7 +17,7 @@ export function CashflowManager() {
   const [RenderInfo, setRenderInfo] = useState(false);
 
   // eslint-disable-next-line
-  const {getCashflow } = useContext(GlobalContext);
+  const { getCashflow } = useContext(GlobalContext);
 
   useEffect(() => {
     // getCashflow();
@@ -29,7 +29,7 @@ export function CashflowManager() {
       })
       .then(async data => {
         const newData = await data.json();
-        
+
         if (newData.data !== null) {
           setIncomes(newData.data.incomes);
           setExpenses(newData.data.expenses);
@@ -37,22 +37,22 @@ export function CashflowManager() {
           // setCategory(newData[0].expenses);
 
           const mappedCategories = categories.map(cat => {
-            return {category: cat, amount: 0}
-        })
+            return { category: cat, amount: 0 }
+          })
 
-        const expenseData = newData.data.expenses // need to refactor this.
-        const result = expenseData.reduce((accumulator, currentValue) => {
+          const expenseData = newData.data.expenses // need to refactor this.
+          const result = expenseData.reduce((accumulator, currentValue) => {
             //find the index of the category
             const indx = accumulator.findIndex((cat) => cat.category === currentValue.category);
-          
+
             //update the amount for this category
             accumulator[indx].amount += currentValue.amount;
-        
+
             //return the accumulator for the next iteration
             return accumulator
-        }, mappedCategories);
-        
-        const resultNoZeroes = result.filter(cat => cat.amount > 0);
+          }, mappedCategories);
+
+          const resultNoZeroes = result.filter(cat => cat.amount > 0);
 
           const updatedIncomes = Object.values(newData.data.incomes)
           const updatedExpenses = resultNoZeroes.map(a => a.amount);
@@ -92,8 +92,8 @@ export function CashflowManager() {
       })
   }, [month]);
 
-
-
+  const expenseSum = expenses.map(a => a.amount);
+  const IncomeSum = Object.values(incomes)
 
   return (
     <React.Fragment>
@@ -104,20 +104,45 @@ export function CashflowManager() {
               return <option key={index.month}>{month}</option>
             })}
           </select>
+          <Link to='/cashflowform'><button type="button" className="btn btn-dark btn-sm">Add New Cashlow</button></Link>
         </div>
       </div>
       {!RenderInfo &&
         <div className="container">
           <div className="jumbotron jumbotron-fluid">
             <h1 className="display-4">Seems you are missing some information?</h1>
-            {month === "Please Select" ? "Please select a month, or simple click below to add information for any given month." : `It Seems you have not entered any information for the month of: ${month}`}
-            <br />
-            <br />
-            <Link to='/cashflowform'><button type="button" className="btn btn-dark">Monthly Cashflow</button></Link>
+            {month === "Please Select" ? "Please select a month, or simple click above to add information for any given month." : `It seems you have not entered any information for the month of: ${month}`}
           </div>
         </div>}
       {RenderInfo &&
         <div className="container">
+          <div className="row">
+            <div className="col-sm-4">
+              <div className="card">
+                <div className="card-body">
+                  <h5 className="card-title">Total Income</h5>
+                  <p className="card-text">${numberWithCommas(IncomeSum.reduce((a, b) => a + b))}</p>
+                </div>
+              </div>
+            </div>
+            <div className="col-sm-4">
+              <div className="card">
+                <div className="card-body">
+                  <h5 className="card-title">Total Expenses</h5>
+                  <p className="card-text">${numberWithCommas(expenseSum.reduce((a, b) => a + b))}</p>
+                </div>
+              </div>
+            </div>
+            <div className="col-sm-4">
+              <div className="card">
+                <div className="card-body">
+                  <h5 className="card-title">Monthly Balance</h5>
+                  <p className="card-text">${numberWithCommas(IncomeSum.reduce((a, b) => a + b) - expenseSum.reduce((a, b) => a + b))}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br/>
           <Chart doughnutData={doughnut} barChartData={bar} pieChartData={pie} />
           <br />
           <div className="container">
@@ -147,7 +172,7 @@ export function CashflowManager() {
                 </tr>
               </thead>
               <tbody>
-                {expenses.map((expense, index) => { //bit of a hack, need to fix this! 
+                {expenses.map((expense, index) => {
                   return (<tr>
                     <td key={index.name}>{expense.name}</td>
                     <td key={index.category}>{expense.category}</td>

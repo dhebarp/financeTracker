@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const mortgageSchema = new Schema({
-startDate: Date,
+planName: String,
 loanAmount: Number,
 interestRate: Number,
 loanDuration: Number,
