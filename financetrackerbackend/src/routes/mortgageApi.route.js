@@ -53,8 +53,13 @@ mortgageApiRouter.put('/update/:id', async (req, res) =>{
 //delete
 mortgageApiRouter.delete('/delete/:id', async (req,res) =>{
     req.body.user_id = req.session.user.id;
-    await Mortgage.findOneAndDelete({_id: req.params.id, user_id: req.session.user.id});
-    res.status(200).json({msg: 'Removed: ' + req.params.id})
+    try {
+        await Mortgage.findOneAndDelete({_id: req.params.id, user_id: req.session.user.id});
+        res.status(200).json({msg: 'Removed: ' + req.params.id});
+    }
+    catch (e) {
+        res.status(204).json({msg: 'no content'});
+    }
 })
 
 
