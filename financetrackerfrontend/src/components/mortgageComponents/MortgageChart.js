@@ -8,15 +8,15 @@ class Chart extends React.Component {
             <>
             <div className='container'>
                 <Doughnut
-                    data={this.props.pieChartData}
+                    data={this.props.data}
                     width={100}
                     height={200}
                     options={{ responsive: true, maintainAspectRatio: false }}
                 />
             </div>
-            <div>
+            <div className='container'>
                 <Line
-                   data={this.props.lineChartData}
+                   data={this.props.linedata}
                    width={100}
                    height={200}
                    options={{ responsive: true, maintainAspectRatio: false }}/>

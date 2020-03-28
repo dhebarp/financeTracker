@@ -34,6 +34,15 @@ mortgageApiRouter.get('/view/:id', async (req,res) => {
     console.log(mortgageInfo);
     res.send(mortgageInfo);
 })
+
+// read all
+mortgageApiRouter.get('/view', async (req,res) => {
+    // console.log("ID TEXT: " , req.params.id)
+    // console.log(req.session.user.id);
+    const mortgageInfo = await Mortgage.find({user_id: req.session.user.id});
+    console.log(mortgageInfo);
+    res.send(mortgageInfo);
+})
 //update
 mortgageApiRouter.put('/update/:id', async (req, res) =>{
     req.body.user_id = req.session.user.id;

@@ -21,22 +21,22 @@ cashflowApiRouter.post('/new', async (req, res) => {
 });
 
 cashflowApiRouter.get('/view/:month', async (req, res) => {
-        req.body.user_id = req.session.user.id;
-        const cashflowInfo = await cashflowModel.findOne({ month: req.params.month, user_id: req.session.user.id });
+    req.body.user_id = req.session.user.id;
+    const cashflowInfo = await cashflowModel.findOne({ month: req.params.month, user_id: req.session.user.id });
     console.log(cashflowInfo);
-        if(cashflowInfo !== null) {
+    if (cashflowInfo !== null) {
 
-            return res.status(200).json({
-                success: true,
-                data: cashflowInfo
-            })
-        } else {
-           return res.status(404).json({
-                success: false,
-                data: null,
-                msg: "No Data Found"
-})
-        }
+        return res.status(200).json({
+            success: true,
+            data: cashflowInfo
+        })
+    } else {
+        return res.status(404).json({
+            success: false,
+            data: null,
+            msg: "No Data Found"
+        })
+    }
 });
 
 cashflowApiRouter.put('/update/:id', async (req, res) => {
