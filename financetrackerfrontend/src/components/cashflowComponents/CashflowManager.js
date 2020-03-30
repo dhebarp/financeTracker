@@ -110,7 +110,7 @@ export function CashflowManager() {
       {!RenderInfo &&
         <div className="container">
           <div className="jumbotron jumbotron-fluid">
-            <h1 className="display-4">Seems you are missing some information?</h1>
+            <h2 className="display-6">Seems you are missing some information?</h2>
             {month === "Please Select" ? "Please select a month, or simple click above to add information for any given month." : `It seems you have not entered any information for the month of: ${month}`}
           </div>
         </div>}

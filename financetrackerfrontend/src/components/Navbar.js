@@ -11,12 +11,6 @@ export function Navbar() {
             <Link className={"nav-link"} alt="Home" to='/'>A.L.F.R.E.D </Link>
           </li>
           <li className="nav-item active">
-            <Link className={"nav-link"} to='/cashflow'>Cashflow</Link>
-          </li>
-          <li className="nav-item active">
-            <Link className={"nav-link"} to='/mortgage'>Mortgage Manager</Link>
-          </li>
-          <li className="nav-item active">
             <Link className={"nav-link"} to='/login'>Login</Link>
           </li>
           <li className="nav-item active">

@@ -1,6 +1,12 @@
 .App {
   text-align: center;
+  position: relative;
+    height: calc(100vh - 50px);
+    transition: 300ms;
+    transition: margin-left .5s;
+    padding: 16px;
 }
+
 
 img {
   height: 200px;
@@ -40,4 +46,15 @@ img {
   to {
     transform: rotate(360deg);
   }
+}
+
+
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+
+.sidenav a:hover, .offcanvas a:focus{
+  color: #f1f1f1;
 }

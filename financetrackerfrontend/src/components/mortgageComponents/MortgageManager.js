@@ -4,7 +4,7 @@ import Chart from './MortgageChart';
 import Table from './MortgageTable';
 import { numberWithCommas } from '/Users/paritoshdhebar/Documents/ga_sei_projects/unit4_project/financetrackerfrontend/src/utils/format';
 
-export function MortgageManager() {
+export const MortgageManager = props => {
 
   const [principal, setPrincipal] = useState('');
   const [rate, setRate] = useState('');
@@ -18,7 +18,8 @@ export function MortgageManager() {
   const [plans, setPlans] = useState([]);
   const [renderInfo, setrenderInfo] = useState(false);
   const [toggleAction, settoggleAction] = useState(false)
-  const [action, setAction] = useState(0)
+  const [action, setAction] = useState(0);
+  const [showWindow, setshowWindow] = useState(false);
 
   useEffect(() => {
 
@@ -92,12 +93,17 @@ export function MortgageManager() {
     }
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event, id) => {
     event.preventDefault();
+    const onePlan = plans.filter(plan => plan.planName === name)
+    id = onePlan[0]._id
     // console.log('you clicked submit');
-
-    createNewMortgage();
-    newMortgageForm();
+    if (!id) {
+      createNewMortgage();
+      setAction(0);
+  } else {
+      updateMortagage();
+  }
   };
 
   const newMortgageForm = () => {
@@ -153,9 +159,35 @@ export function MortgageManager() {
       })
   }
 
-  const updateMortagage = () => {
+  
+  const updateMortagage = (id) => {
 
+    const onePlan = plans.filter(plan => plan.planName === name)
+    id = onePlan[0]._id
+
+    fetch(`/mortgage/update/${id}`, {
+            method: 'PUT', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            headers: {
+                'Content-Type': 'application/json' // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: JSON.stringify({
+              planName: name,
+              loanAmount: principal,
+              interestRate: rate,
+              loanDuration: years,
+
+          })  // body data type must match "Content-Type" header
+      })
+          .then((res) => res.json())
+          .then((data) => {
+              console.log(data);
+              props.history.push('/mortgage');
+          })
+          .catch((e) => console.log(e));
   }
+
+  
 
   const deleteMortgage = (id) => {
 
@@ -168,15 +200,18 @@ export function MortgageManager() {
       mode: 'cors', // no-cors, *cors, same-origin
       credentials: "same-origin",
     }) // body data type must match "Content-Type" header
-      .then(() => {
-        setPlans(plans => [...plans]);
-      })
-      .catch((e) => console.log(e));
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setPlans(plans => [...plans]);
+            props.history.push('/mortgage');
+        })
+        .catch((e) => console.log(e));
   }
 
   const viewMortgage = (name) => {
 
-    const onePlan = plans.filter(plan => plan.planName === name)
+    const onePlan = plans.filter(plan => plan.planName == name)
     setPrincipal(onePlan[0].loanAmount);
     setRate(onePlan[0].interestRate);
     setYears(onePlan[0].loanDuration);
@@ -194,20 +229,19 @@ export function MortgageManager() {
             return <option key={id}>{plan.planName}</option>
           })}
         </select>
-        <div className="dropdown" onClick={() => { settoggleAction(!toggleAction) && setAction(0)} }>
+        <div className="dropdown" onClick={() =>settoggleAction(!toggleAction)}>
           <button className="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Options
           </button>
           <div className={`dropdown-menu${toggleAction ? "show" : ""}`} aria-labelledby="dropdownMenu2">
             <button className="dropdown-item" onClick={() => setAction(1)} type="button">Create New Plan</button>
-            <button className="dropdown-item" onClick={() => setAction(2)} type="button">Update Plan</button>
+            <button className="dropdown-item" onClick={() => setAction(1)} type="button">Update Plan</button>
             <button className="dropdown-item" onClick={() => deleteMortgage()} type="button">Delete Plan</button>
             <button className="dropdown-item" onClick={() => setAction(0)} type="button">Close</button>
           </div>
         </div>
       </div>
       {action ===1 && newMortgageForm()}
-      {action ===2 && updateMortagage()}
       <div className="col">
         <div className="row">
           <div className="col-sm-4">

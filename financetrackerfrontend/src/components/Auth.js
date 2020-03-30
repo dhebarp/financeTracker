@@ -1,7 +1,8 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 
-export function Auth() {
+export const Auth = props => {
 
+    const { match } = props;
     const [user, setUser] = useState("");
     const [password, setPassword] = useState("");
     const [profile, setProfile] = useState({});
@@ -9,133 +10,129 @@ export function Auth() {
     const [status, setStatus] = useState(false);
 
     useEffect(() => {
-//   const queryUserStatus = (headers, url) => { 
-  fetch('/mortgage', {credentials: "same-origin"})
-  .then(async data => {
-      if(data.status === 200)
-      {
-          setStatus(true);
+        //   const queryUserStatus = (headers, url) => { 
+        fetch('/mortgage', { credentials: "same-origin" })
+            .then(async data => {
+                if (data.status === 200) {
+                    setStatus(true);
 
-          //get the user information
-          fetch('/auth/checkUser',
-              {
-                  credentials: "same-origin",
-              })
-              .then(async userData => {
-                      const profile = await userData.json();
-                      setProfile(profile);
-                      setStatus(true);
-                      setErrors([])
-              })
-      }
-  })
-},[]);
+                    //get the user information
+                    fetch('/auth/checkUser',
+                        {
+                            credentials: "same-origin",
+                        })
+                        .then(async userData => {
+                            const profile = await userData.json();
+                            setProfile(profile);
+                            setStatus(true);
+                            setErrors([])
+                        })
+                }
+            })
+    }, []);
 
-const queryUserStatus = (url) => {
-  fetch(url,
-      {
-          method: "POST",
-          credentials: "same-origin",
-          headers: {
-              "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-              username: user,
-              password: password
-          })
-      })
-      .then(async data => {
-          if(data.status === 201)
-          {
-              const profile = await data.json();
-              console.log(profile);
-              setProfile(profile);
-              setStatus(true);
-              setErrors([])
-          }
+    const queryUserStatus = (url) => {
+        fetch(url,
+            {
+                method: "POST",
+                credentials: "same-origin",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username: user,
+                    password: password
+                })
+            })
+            .then(async data => {
+                if (data.status === 201) {
+                    const profile = await data.json();
+                    console.log(profile);
+                    setProfile(profile);
+                    setStatus(true);
+                    setErrors([])
+                    props.history.push('/dashboard');
+                }
 
-          if(data.status > 299)
-          {
-              console.log("user not found");
-              if(user !== "")
-                  setErrors([data.status + " user not found"])
-          }
-      })
-      .catch(e => {
-          console.log(e.status);
-      });
-};
+                if (data.status > 299) {
+                    console.log("user not found");
+                    if (user !== "")
+                        setErrors([data.status + " user not found"])
+                }
+            })
+            .catch(e => {
+                console.log(e.status);
+            });
+    };
 
-const logout = () => {
-  fetch('/auth/logout',
-      {
-          credentials: "same-origin",
-      })
-      .then(async response => {
-          if(response.status === 201)
-          {
-              setStatus(false);
-              setUser("")
-              setProfile({});
-              setErrors([])
-          }
-          else
-          {
-              console.log("error logging out");
-              if(user !== "")
-                  setErrors(["Error loggin out"])
-          }
-      })
-      .catch(e => {
-          console.log(e.status);
-      });
-};
+    const logout = () => {
+        fetch('/auth/logout',
+            {
+                credentials: "same-origin",
+            })
+            .then(async response => {
+                if (response.status === 201) {
+                    setStatus(false);
+                    setUser("")
+                    setProfile({});
+                    setErrors([])
+                }
+                else {
+                    console.log("error logging out");
+                    if (user !== "")
+                        setErrors(["Error loggin out"])
+                }
+            })
+            .catch(e => {
+                console.log(e.status);
+            });
+    };
 
 
-const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log('you clicked submit');
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        console.log('you clicked submit');
 
-    queryUserStatus('/auth/login');
-};
+        queryUserStatus('/auth/login');
+    };
 
-const renderForm = () => {
-  return (
-      <form onSubmit={handleSubmit}>
-      <label>
-          Username:
+    const renderForm = () => {
+        return (
+            <form onSubmit={handleSubmit}>
+                <label>
+                    Username:
           <input type="text" value={user} onChange={(event) => setUser(event.target.value)} />
-      </label>
+                </label>
 
-      <label>
-          password:
+                <label>
+                    password:
           <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
-      </label>
-      <input type="submit" value="Submit" />
-  </form>
-  )
-};
+                </label>
+                <input type="submit" value="Submit" />
+            </form>
+        )
+    };
 
-const renderProfile = () => {
-  return (
-      <div>
-          <p>Username: {profile.username}</p>
-          <p>First Name: {profile.firstName}</p>
-          <p>Last Name: {profile.lastName}</p>
-          <p>Email: {profile.email}</p>
-          <button onClick={logout} >Logout</button>
-      </div>
-  )
-};
+    const renderProfile = () => {
+        return (
+            <div>
+                <p>Username: {profile.username}</p>
+                <p>First Name: {profile.firstName}</p>
+                <p>Last Name: {profile.lastName}</p>
+                <p>Email: {profile.email}</p>
+                <button onClick={logout} >Logout</button>
+            </div>
+        )
+    };
 
-return (
-  <div style={{"paddingTop": "20px"}}>
+    return (
+        <div style={{ "paddingTop": "20px" }}>
 
-      {!status && renderForm()}
-      {status && renderProfile()}
+            {!status && renderForm()}
+            {status && renderProfile()}
 
-      {  errors.map((e, index) => <p key={index}>{e}</p>)  }
-  </div>
-)
+            {errors.map((e, index) => <p key={index}>{e}</p>)}
+        </div>
+    )
 }
 

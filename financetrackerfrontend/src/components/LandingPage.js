@@ -1,7 +1,7 @@
 import React from 'react';
 import '../App.css'
 
-export class Home extends React.Component {
+export class LandingPage extends React.Component {
 
 render() {
     return(

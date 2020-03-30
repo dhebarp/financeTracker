@@ -1,12 +1,22 @@
 import React from 'react';
-import SideNav, {NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
+import { Route } from 'react-router-dom';
+import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
 
-export function SideNavBar () {
+export const SideNavBar = () => {
   return(
+    <Route render={({ location, history }) => (
+        <React.Fragment>
     <SideNav
     onSelect={(selected) => {
-        // Add your code here
+        const to = '/' + selected;
+                    if (location.pathname !== to) {
+                        history.push(to);
+                    }
     }}
+    style={{
+        position: 'fixed',
+        display: 'block',
+      }}
 >
     <SideNav.Toggle />
     <SideNav.Nav defaultSelected="home">
@@ -18,25 +28,26 @@ export function SideNavBar () {
                 Home
             </NavText>
         </NavItem>
-        <NavItem eventKey="charts">
+        <NavItem eventKey="mortgage">
             <NavIcon>
-                <i className="fa fa-fw fa-line-chart" style={{ fontSize: '1.75em' }} />
+                <i className="fa fa-fw fas fa-university" style={{ fontSize: '1.75em' }} />
             </NavIcon>
             <NavText>
-                Charts
+                Mortgage
             </NavText>
-            <NavItem eventKey="charts/linechart">
-                <NavText>
-                    Line Chart
-                </NavText>
-            </NavItem>
-            <NavItem eventKey="charts/barchart">
-                <NavText>
-                    Bar Chart
-                </NavText>
-            </NavItem>
+        </NavItem>
+        <NavItem eventKey="cashflow">
+            <NavIcon>
+                <i className="fa fa-fw fas fa-usd" style={{ fontSize: '1.75em' }} />
+            </NavIcon>
+            <NavText>
+                Cashflow
+            </NavText>
         </NavItem>
     </SideNav.Nav>
 </SideNav>
+</React.Fragment>
+    )}
+    />
   )
 }
