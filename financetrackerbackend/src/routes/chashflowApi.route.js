@@ -20,9 +20,29 @@ cashflowApiRouter.post('/new', async (req, res) => {
     res.json({ status: 'cashflow data created', newCashflow });
 });
 
+//GET 1 Month
 cashflowApiRouter.get('/view/:month', async (req, res) => {
     req.body.user_id = req.session.user.id;
     const cashflowInfo = await cashflowModel.findOne({ month: req.params.month, user_id: req.session.user.id });
+    console.log(cashflowInfo);
+    if (cashflowInfo !== null) {
+
+        return res.status(200).json({
+            success: true,
+            data: cashflowInfo
+        })
+    } else {
+        return res.status(404).json({
+            success: false,
+            data: null,
+            msg: "No Data Found"
+        })
+    }
+});
+
+cashflowApiRouter.get('/view', async (req, res) => {
+    req.body.user_id = req.session.user.id;
+    const cashflowInfo = await cashflowModel.find({user_id: req.session.user.id });
     console.log(cashflowInfo);
     if (cashflowInfo !== null) {
 

@@ -6,6 +6,13 @@ class Chart extends React.Component {
     render() {
         return (
             <>
+             <div>
+                <Line
+                   data={this.props.linedata}
+                   width={100}
+                   height={200}
+                   options={{ responsive: true, maintainAspectRatio: false }}/>
+            </div>
             <div className='container'>
                 <Doughnut
                     data={this.props.data}
@@ -13,13 +20,6 @@ class Chart extends React.Component {
                     height={200}
                     options={{ responsive: true, maintainAspectRatio: false }}
                 />
-            </div>
-            <div className='container'>
-                <Line
-                   data={this.props.linedata}
-                   width={100}
-                   height={200}
-                   options={{ responsive: true, maintainAspectRatio: false }}/>
             </div>
             </>
         )

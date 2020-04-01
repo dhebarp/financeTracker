@@ -3,6 +3,9 @@ import { calculatePayments } from './MortgageData'
 import Chart from './MortgageChart';
 import Table from './MortgageTable';
 import { numberWithCommas } from '/Users/paritoshdhebar/Documents/ga_sei_projects/unit4_project/financetrackerfrontend/src/utils/format';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 export const MortgageManager = props => {
 
@@ -10,16 +13,13 @@ export const MortgageManager = props => {
   const [rate, setRate] = useState('');
   const [years, setYears] = useState('');
   const { monthlyPayment, totalInterest, totalPayment, payments } = calculatePayments(principal, rate, years);
-  // console.log(typeof initialTotalInterest, initialTotalInterest, initialMonthlyPayment);
-  // const [monthlyPayment, setMonthlyPayment] = useState('');
-  // const [totalInterest, setTotalInterest] = useState('');
-  // const [totalPayment, setTotalPayment] = useState('');
   const [name, setName] = useState('');
   const [plans, setPlans] = useState([]);
-  const [renderInfo, setrenderInfo] = useState(false);
-  const [toggleAction, settoggleAction] = useState(false)
   const [action, setAction] = useState(0);
-  const [showWindow, setshowWindow] = useState(false);
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   useEffect(() => {
 
@@ -101,9 +101,9 @@ export const MortgageManager = props => {
     if (!id) {
       createNewMortgage();
       setAction(0);
-  } else {
+    } else {
       updateMortagage();
-  }
+    }
   };
 
   const newMortgageForm = () => {
@@ -159,35 +159,33 @@ export const MortgageManager = props => {
       })
   }
 
-  
+
   const updateMortagage = (id) => {
 
     const onePlan = plans.filter(plan => plan.planName === name)
     id = onePlan[0]._id
 
     fetch(`/mortgage/update/${id}`, {
-            method: 'PUT', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors', // no-cors, *cors, same-origin
-            headers: {
-                'Content-Type': 'application/json' // 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: JSON.stringify({
-              planName: name,
-              loanAmount: principal,
-              interestRate: rate,
-              loanDuration: years,
+      method: 'PUT', // *GET, POST, PUT, DELETE, etc.
+      mode: 'cors', // no-cors, *cors, same-origin
+      headers: {
+        'Content-Type': 'application/json' // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify({
+        planName: name,
+        loanAmount: principal,
+        interestRate: rate,
+        loanDuration: years,
 
-          })  // body data type must match "Content-Type" header
+      })  // body data type must match "Content-Type" header
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        props.history.push('/mortgage');
       })
-          .then((res) => res.json())
-          .then((data) => {
-              console.log(data);
-              props.history.push('/mortgage');
-          })
-          .catch((e) => console.log(e));
+      .catch((e) => console.log(e));
   }
-
-  
 
   const deleteMortgage = (id) => {
 
@@ -200,18 +198,20 @@ export const MortgageManager = props => {
       mode: 'cors', // no-cors, *cors, same-origin
       credentials: "same-origin",
     }) // body data type must match "Content-Type" header
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          setPlans(plans => [...plans]);
-            props.history.push('/mortgage');
-        })
-        .catch((e) => console.log(e));
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setPlans(plans => [...plans]);
+        props.history.push('/mortgage');
+      })
+      .catch((e) => console.log(e));
+
+    handleClose()
   }
 
   const viewMortgage = (name) => {
 
-    const onePlan = plans.filter(plan => plan.planName == name)
+    const onePlan = plans.filter(plan => plan.planName === name)
     setPrincipal(onePlan[0].loanAmount);
     setRate(onePlan[0].interestRate);
     setYears(onePlan[0].loanDuration);
@@ -229,19 +229,34 @@ export const MortgageManager = props => {
             return <option key={id}>{plan.planName}</option>
           })}
         </select>
-        <div className="dropdown" onClick={() =>settoggleAction(!toggleAction)}>
-          <button className="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Options
-          </button>
-          <div className={`dropdown-menu${toggleAction ? "show" : ""}`} aria-labelledby="dropdownMenu2">
-            <button className="dropdown-item" onClick={() => setAction(1)} type="button">Create New Plan</button>
-            <button className="dropdown-item" onClick={() => setAction(1)} type="button">Update Plan</button>
-            <button className="dropdown-item" onClick={() => deleteMortgage()} type="button">Delete Plan</button>
-            <button className="dropdown-item" onClick={() => setAction(0)} type="button">Close</button>
-          </div>
-        </div>
+          <Dropdown>
+            <Dropdown.Toggle variant="success">
+              Options
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={() => setAction(1)} >Create New Plan</Dropdown.Item>
+              <Dropdown.Item onClick={() => setAction(1)} >Updated Plan</Dropdown.Item>
+              <Dropdown.Item onClick={() => handleShow()}>Delete Plan</Dropdown.Item>
+              <Dropdown.Item onClick={() => setAction(0)}>Close</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
       </div>
-      {action ===1 && newMortgageForm()}
+      {action === 1 && newMortgageForm()}
+      <Modal show={show} onHide={handleClose} animation={false}>
+        <Modal.Header closeButton>
+          <Modal.Title>Delete Plan</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you would like to delete {name}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="danger" onClick={deleteMortgage}>
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <div className="col">
         <div className="row">
           <div className="col-sm-4">

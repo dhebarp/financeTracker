@@ -12,7 +12,6 @@ import { CashflowManager } from './components/cashflowComponents/CashflowManager
 import { CashflowForm } from './components/cashflowComponents/CashflowForm';
 import { MortgageManager } from './components/mortgageComponents/MortgageManager';
 import { Dashboard } from './components/Dashboard';
-import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
 
 export function App() {
 
@@ -43,6 +42,7 @@ export function App() {
     return (
       <>
         <SideNavBar />
+        <Route exact path={"/login"} component={Auth} />
         <Route exact path={"/dashboard"} component={Dashboard} />
         <Route exact path={"/mortgage"} component={MortgageManager} />
         <Route exact path={"/cashflow"} component={CashflowManager} />
@@ -55,7 +55,6 @@ export function App() {
     <div className="App">
       <GlobalProvider>
         <Navbar />
-        <SideNavBar />
         <Switch>
           <Route exact path={"/"} component={LandingPage} />
           <Route exact path={"/login"} component={Auth} />

@@ -12,6 +12,8 @@ const mortgageApi = require('./routes/mortgageApi.route');
 const AuthRouter = require('./routes/Auth.route');
 const PublicRouter = require('./routes/Public.route');
 const cashflowApi = require('./routes/chashflowApi.route');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require("/Users/paritoshdhebar/Documents/ga_sei_projects/unit4_project/financetrackerbackend/swagger.json");
 
 app.use(cookieParser());
 app.use(cors());
@@ -42,6 +44,8 @@ app.use('/public', PublicRouter);
 app.use('/auth', AuthRouter);
 app.use('/mortgage', mortgageApi);
 app.use('/cashflow', cashflowApi);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 
 
 const port = process.env.PORT || 4000;

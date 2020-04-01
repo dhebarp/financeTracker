@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 
 export const Auth = props => {
 
-    const { match } = props;
     const [user, setUser] = useState("");
     const [password, setPassword] = useState("");
     const [profile, setProfile] = useState({});
@@ -52,6 +51,7 @@ export const Auth = props => {
                     setStatus(true);
                     setErrors([])
                     props.history.push('/dashboard');
+                    window.location.reload();
                 }
 
                 if (data.status > 299) {
